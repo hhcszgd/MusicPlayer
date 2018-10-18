@@ -26,9 +26,3 @@ class ViewController: UIViewController {
 
 
 }
-
-extension ViewController{
-    func testPHP() {
-        PHPRequestManager.share.test()
-    }
-}

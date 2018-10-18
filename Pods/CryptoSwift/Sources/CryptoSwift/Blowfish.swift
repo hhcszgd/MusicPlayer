@@ -34,8 +34,8 @@ public final class Blowfish {
 
     private let blockMode: BlockMode
     private let padding: Padding
-    private var decryptWorker: BlockModeWorker!
-    private var encryptWorker: BlockModeWorker!
+    private var decryptWorker: CipherModeWorker!
+    private var encryptWorker: CipherModeWorker!
 
     private let N = 16 // rounds
     private var P: Array<UInt32>
@@ -504,7 +504,7 @@ extension Blowfish: Cipher {
         out.reserveCapacity(bytes.count)
 
         for chunk in bytes.batched(by: Blowfish.blockSize) {
-            out += encryptWorker.encrypt(chunk)
+            out += encryptWorker.encrypt(block: chunk)
         }
 
         if blockMode.options.contains(.paddingRequired) && (out.count % Blowfish.blockSize != 0) {
@@ -527,7 +527,7 @@ extension Blowfish: Cipher {
         out.reserveCapacity(bytes.count)
 
         for chunk in Array(bytes).batched(by: Blowfish.blockSize) {
-            out += decryptWorker.decrypt(chunk) // FIXME: copying here is innefective
+            out += decryptWorker.decrypt(block: chunk) // FIXME: copying here is innefective
         }
 
         out = padding.remove(from: out, blockSize: Blowfish.blockSize)

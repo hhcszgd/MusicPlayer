@@ -26,7 +26,20 @@ class MusicPlayer: NSObject  {
         super.init()
         self.setupLockScreen()
     }
-    
+    func playMusic1(currentNusicIndex:Int , musicArr: [MusicModel]? = nil )  {
+        var musicName = ""
+        
+        if musicArr != nil && musicArr!.count > 0 {
+            self.musics = musicArr
+            musicName = self.musics?[currentNusicIndex].name ?? ""
+        }
+        musicName = self.musics?[currentNusicIndex].name ?? ""
+        self.currentMusicIndex = currentNusicIndex
+//        self.performPlay(musicName: musicName)
+        self.playWith(url: self.musics?[currentNusicIndex].url)
+        
+        
+    }
     func playMusic(currentNusicIndex:Int , musicArr: [MusicModel]? = nil )  {
         var musicName = ""
         
@@ -63,6 +76,26 @@ class MusicPlayer: NSObject  {
         configureNowPlayingInfo(musicName:musicName)
         
     }
+     func playWith(url:URL?) {
+        guard let url = url  else {
+            currentMusicIndex += 1
+            self.playMusic(currentNusicIndex: currentMusicIndex, musicArr: self.musics)
+            return
+        }
+//        var  docuPath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).last!
+//        docuPath = docuPath + "/\(musicName)"
+//        player?.stop()
+//        let url = URL(fileURLWithPath: docuPath)
+        let musicName = url.lastPathComponent + ".\(url.pathExtension)"
+        let p = try? AVAudioPlayer.init(contentsOf: url )
+        
+        p?.delegate = self
+        self.player = p
+        p?.play()
+        configureNowPlayingInfo(musicName:musicName)
+        
+    }
+    
     func setupLockScreen(){
         let commandCenter = MPRemoteCommandCenter.shared()
         MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyTitle: ""]//要显示的歌名

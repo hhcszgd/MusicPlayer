@@ -10,7 +10,7 @@ import UIKit
 class PHPRequestManager : NSObject, URLSessionDelegate{
     static let share = PHPRequestManager()
     var sessiono : URLSession?
-    
+    /*
     func add()  {
         let url = URL(string: "http://127.0.0.1:8080/test/add.php")!
         var  request = NSMutableURLRequest(url: url )
@@ -96,5 +96,6 @@ class PHPRequestManager : NSObject, URLSessionDelegate{
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?){
         mylog(error)
     }
+    */
 }
 

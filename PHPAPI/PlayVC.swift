@@ -8,21 +8,29 @@
 
 import UIKit
 
-class PlayVC: UIViewController {
-
+class PlayVC: GDBaseWebVC {
+    var currentIndex = 0
+    
+    var musicModel : [MusicModel]?
+    var pdfModels : [MusicModel]?
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.orange
-        if let dict = self.userInfo as? [String : Any ]{
-            if let currentNusicIndex = dict["currentSong"] as? Int , let musicArr = dict["songsArr"] as? [MusicModel]{
-                let musicName = musicArr[currentNusicIndex].name
-                self.title = musicName
-                MusicPlayer.share.playMusic(currentNusicIndex: currentNusicIndex , musicArr:musicArr)
-            }
-        }
+//        self.view.backgroundColor = UIColor.orange
+        let lastPathComponent = musicModel?[currentIndex].url?.lastPathComponent ?? "name"
+        let pathExtension = musicModel?[currentIndex].url?.pathExtension ?? "extexsion"
+        
+         MusicPlayer.share.playMusic1(currentNusicIndex: currentIndex , musicArr:musicModel ?? [])
+        self.naviBar.title = lastPathComponent + pathExtension
+//       self.loadPdf()
+        
         // Do any additional setup after loading the view.
     }
-
+    func loadPdf() {
+        let pdfModel = self.pdfModels?[currentIndex]
+        if let url = pdfModel?.url {
+            self.webView.load(URLRequest(url: url))
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

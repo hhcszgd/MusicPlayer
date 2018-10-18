@@ -43,7 +43,7 @@ class TableViewController: UITableViewController {
 //                model.url
                 let name = FileManager.default.displayName(atPath: item)
                 model.name = name
-                model.url = item
+                model.urlStr = item
                 musics.append(model)
             }
             self.musics = musics
@@ -51,10 +51,10 @@ class TableViewController: UITableViewController {
         }else{
             DDRequestManager.share.request(url: "music/get_music.php", method: .post, para: ["zhang":"小史同学"], true )?.responseJSON(completionHandler: { (response) in
                 mylog(response.debugDescription)
-                if let musicModel = DDDecode([MusicModel].self , from: response.data ?? Data()){
-                    self.musics = musicModel
-                    self.tableView.reloadData()
-                }
+//                if let musicModel = DDDecode([MusicModel].self , from: response.data ?? Data()){
+//                    self.musics = musicModel
+//                    self.tableView.reloadData()
+//                }
             })
             
         }
@@ -179,9 +179,9 @@ class TableViewController: UITableViewController {
 
 class MusicModel: NSObject , Codable {
     var name  = ""
-    var url = ""
+    var urlStr = ""
     var size = ""
-    
+    var url : URL?
 }
 
 class Test{
